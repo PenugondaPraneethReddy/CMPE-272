@@ -27,7 +27,6 @@ if (isset($_SESSION['username'])) {
   <link rel="stylesheet" type="text/css" href="css/slick-theme.css">
   <link rel="stylesheet" type="text/css" href="css/footer.css">
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  
   </head>
   <body>
 
@@ -37,10 +36,10 @@ if (isset($_SESSION['username'])) {
        <ul>
        <li><a href="index.php">Home</a></li>&nbsp;&nbsp;
 	   <li><a href="about.php">About</a></li>
-	   <li><a class="active" href="products.php">Products</a></li>
+	   <li><a href="products.php">Products</a></li>
 	   <li><a href="news.php">News</a></li>
        <li><a href="contact.php">Contacts</a></li>
-       <li><a href="companyusers.php">Company Users</a></li>
+       <li><a class="active" href="companyusers.php">Company Users</a></li>
         <?php
     if (isset($_SESSION['username']) && $_SESSION['username'] === 'admin') {
         // Display the "Users" link only if the user is logged in as admin
@@ -53,82 +52,44 @@ if (isset($_SESSION['username'])) {
        </ul>
      </div>
    </div>
+
    <br>
    <br>
    <br>
-   <br>
-   <br>
-   <br>
+   <br><br><br><br>
+   <h3>list of users from the company : </h3>
+   <div class="containerr-news">
+        <!-- <img class="image" src="home_im.jpeg" alt="Image"> -->
+        <div class="center-container" style="font-size :28px; color:white;">
    <?php
+function curlRequest($url) {
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $response = curl_exec($ch);
+    curl_close($ch);
 
-if (isset($_GET['name']) && isset($_GET['img']) && isset($_GET['des']) && isset($_GET['imdb'])) {
-    $productTitle = $_GET['name'];
-    $productDescription = $_GET['des'];
-    $productimdb = $_GET['imdb'];
-    $img = $_GET['img'];
-    $pn =  array($productTitle,$productDescription, $productimdb, $img);
-
-    $productTitleJ=implode('~',$pn);
-    $currentCookie = isset($_COOKIE['visitedProducts']) ? $_COOKIE['visitedProducts'] : '';
-    $highestvisitedCookie = isset($_COOKIE['MostVisitedProducts']) ? $_COOKIE['MostVisitedProducts'] : '';
-    $highestvisitedArray = explode('`', $highestvisitedCookie);
-
-    $moviesArray = explode('`',  $currentCookie);
-    $found=false;
-    // removing already visited product and adding to the front
-    foreach ($moviesArray as $key=>$productt) {
-        $product= explode('~',$productt);
-        if(isset($product[0]) && isset($product[1]) && isset($product[2]) && isset($product[3]) ){
-            if($product[0]== $productTitle){
-                unset($moviesArray[$key]);
-            }
-        }
-    }
-    foreach ($highestvisitedArray as $key=>$mostproductt) {
-        $product= explode('~',$mostproductt);
-        if(isset($product[0]) && isset($product[1]) ){
-            if($product[0]== $productTitle){
-                $found=true;
-                $product[1]= (int)$product[1]+1;
-                $highestvisitedArray[$key] = "$productTitle~$product[1]~$img~$productDescription~$productimdb";
-            }
-        }
-    }
-    if($found==false){
-        array_push($highestvisitedArray, "$productTitle~1~$img~$productDescription~$productimdb");
-    }
-    $moviesArray = array_values($moviesArray);
-
-    array_unshift($moviesArray, $productTitleJ);
-    if (count($moviesArray) > 5) {
-        array_pop($moviesArray);
-    }
-
-
-
-    // Set the cookie with the updated products array
-    setcookie('visitedProducts', implode('`', $moviesArray), strtotime('Fri, 31 Dec 9999 23:59:59 GMT'), '/');
-    setcookie('MostVisitedProducts', implode('`', $highestvisitedArray), strtotime('Fri, 31 Dec 9999 23:59:59 GMT'), '/');
-
-    echo $img;
-   
-    echo '<div class="product" style="color:white;position:relative;left:40% width: 50px">';
-    echo '<img src="' . $_GET['img'] . '" alt="Product Image" width="230" height="345">';
-    echo '<h2>' . $productTitle . '</h2>'; 
-    echo '<p>Description: ' . urldecode($productDescription) . '</p>';
-    echo  '<a class ="button-link" style="color:white;  background-color: #3498db;  border-radius: 5px;  padding: 10px 20px;" href="'. $productimdb. '">IMDB</a>';
-    echo '</div>';
-} else {
-    echo '<p>No product information found.</p>';
+    return $response;
 }
+$urlA = 'https://praneethreddypenugonda.000webhostapp.com/curl/userdata.php';
+$dataA = curlRequest($urlA);
+$urlB = 'https://abhinandu.000webhostapp.com/curl/userdata.php'; 
+$dataB = curlRequest($urlB);
+$urlC = 'https://maheedhar.000webhostapp.com/curl/userdata.php'; 
+$dataC = curlRequest($urlC);
+
+echo '<p>Data From company A</p>';
+print_r($dataA);
+echo '<p>Data From company B</p>';
+print_r($dataB);
+echo '<p>Data From company C</p>';
+print_r($dataC);
+
 ?>
-  
-
-
-	<br>
-    <br>
-    <br>
-
+        </div>
+   </div>
+<br>
+<br>
+<br>
   <footer class="footer-distributed">
  
 		<div class="footer-left">

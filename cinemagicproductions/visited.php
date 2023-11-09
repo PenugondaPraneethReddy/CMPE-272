@@ -73,15 +73,7 @@ if (isset($_SESSION['username'])) {
    <br>
    <br>
    <br>
-   <br>
-   <br>
-   <br>
-   <br>
-   
-
-   <a class="button-link" href='/cinemagicproductions/visited.php' style="color:white;  background-color: #3498db;  border-radius: 5px;  padding: 10px 20px">Last Visited Products</a>
-    <a class="button-link" href='/cinemagicproductions/mostvisited.php' style="color:white;  background-color: #3498db;  border-radius: 5px;  padding: 10px 20px;">Most Visited Products</a>
-    <br><br><br>
+   <br><br><br><br>
     <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
         <button type="submit" name="clearCookies" class="clearCookies">Clear All</button>
     </form>
@@ -95,11 +87,11 @@ if (isset($_SESSION['username'])) {
             exit();
         }
 
-$visitedProducts = isset($_COOKIE['visitedProducts']) ? explode('`', $_COOKIE['visitedProducts']) : [];
+$searchedMovies = isset($_COOKIE['visitedProducts']) ? explode('`', $_COOKIE['visitedProducts']) : [];
 
 echo '<div style="display:inline-flex" >';
 // Loop through the mocked product data and generate product cards
-foreach ($visitedProducts as $productt) {
+foreach ($searchedMovies as $productt) {
     $product= explode('~',$productt);
 
     if(isset($product[0]) && isset($product[1]) && isset($product[2]) && isset($product[3]) ){
@@ -108,9 +100,7 @@ foreach ($visitedProducts as $productt) {
         echo '<div class="product-card" >';
         echo '<img src="' . urldecode($product[3]) . '" alt="Product Image" width="230" height="345">';
         echo '<h2 class="product-title">' . $product[0] . '</h2>';
-        echo  '<a class ="button-link" style="color:white;  background-color: #3498db;  border-radius: 5px;  padding: 10px 20px;" href="'. $product[2]. '">IMDB</a>';
-        // echo '<p class="product-price">$' . $product[2] . '</p>';
-        echo '</div>';
+        echo  '<a class ="button-link" style="color:white;  background-color: #3498db;  border-radius: 5px;  padding: 10px 20px;" href="'. $product[2]. '">IMDB</a>';        echo '</div>';
         echo '</a>';
         echo '</div>';
     }

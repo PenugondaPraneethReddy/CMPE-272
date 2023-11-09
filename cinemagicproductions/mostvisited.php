@@ -57,6 +57,7 @@ if (isset($_SESSION['username'])) {
 	   <li><a class="active" href="products.php">Products</a></li>
 	   <li><a href="news.php">News</a></li>
        <li><a href="contact.php">Contacts</a></li>
+       <li><a href="companyusers.php">Company Users</a></li>
         <?php
     if (isset($_SESSION['username']) && $_SESSION['username'] === 'admin') {
         // Display the "Users" link only if the user is logged in as admin
@@ -75,13 +76,7 @@ if (isset($_SESSION['username'])) {
    <br>
    <br>
    <br>
-   <br>
-   <br>
-   
-
-   <a class="button-link" href='/cinemagicproductions/visited.php' style="color:white;  background-color: #3498db;  border-radius: 5px;  padding: 10px 20px">Last Visited Products</a>
-    <a class="button-link" href='/cinemagicproductions/mostvisited.php' style="color:white;  background-color: #3498db;  border-radius: 5px;  padding: 10px 20px;">Most Visited Products</a>
-    <br><br><br>
+   <br><br>
     <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
         <button type="submit" name="clearCookies" class="clearCookies">Clear All</button>
     </form>
