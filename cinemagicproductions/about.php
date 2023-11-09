@@ -30,8 +30,8 @@ if (isset($_SESSION['username'])) {
  		<img src="images/logo2.png" alt="logo">
 		<div class="header-right">
 			<ul>
-				<li><a class="active" href="index.php">Home</a></li>
-				<li><a href="about.php">About</a></li>&nbsp;&nbsp;
+				<li><a  href="index.php">Home</a></li>
+				<li><a class="active" href="about.php">About</a></li>&nbsp;&nbsp;
 				<li><a href="products.php">Products</a></li>
 				<li><a href="news.php">News</a></li>
 				<li><a href="contact.php">Contacts</a></li>

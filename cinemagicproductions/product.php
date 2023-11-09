@@ -35,70 +35,112 @@ if (isset($_SESSION['username'])) {
       <img src="images/logo2.png" alt="logo">
      <div class="header-right">
        <ul>
-       <li><a  href="index.php">Home</a></li>&nbsp;&nbsp;
+       <li><a href="index.php">Home</a></li>&nbsp;&nbsp;
 	   <li><a href="about.php">About</a></li>
-	   <li><a href="products.php">Products</a></li>
+	   <li><a class="active" href="products.php">Products</a></li>
 	   <li><a href="news.php">News</a></li>
-       <li><a class="active" href="contact.php">Contacts</a></li>
+       <li><a href="contact.php">Contacts</a></li>
         <?php
     if (isset($_SESSION['username']) && $_SESSION['username'] === 'admin') {
         // Display the "Users" link only if the user is logged in as admin
         echo '<li><a href="users.php">Users</a></li>';
     }
     ?>
-
-
-        
          <?php echo $loginButton ?>
   
             </ul>
        </ul>
      </div>
    </div>
- <div style="color:white; padding-top: 100px; padding-bottom: 250px">
-     <br><br>
-     <h1>current users</h1>
-    <?php
-    if (isset($_SESSION['username']) && $_SESSION['username'] === 'admin') {
-        //read contacts from text files
-            $contacts = file("users.txt", FILE_IGNORE_NEW_LINES);
-            if ($contacts === false) {
-                echo "Error reading file.";
-            } else {
-                
-                echo "<ul>";
-                foreach ($contacts as $contact) {
-                    list($name) = explode(", ", $contact);
-                    echo "<li><strong>Name:</strong> $name </li>";
-                }
-                echo "</ul>";
+   <br>
+   <br>
+   <br>
+   <br>
+   <br>
+   <br>
+   <?php
+
+if (isset($_GET['name']) && isset($_GET['img']) && isset($_GET['des']) && isset($_GET['imdb'])) {
+    $productName = $_GET['name'];
+    $productDescription = $_GET['des'];
+    $productPrice = $_GET['imdb'];
+    $img = $_GET['img'];
+    $pn =  array($productName,$productDescription, $productPrice, $img);
+
+    $productNameJ=implode('~',$pn);
+    $existingCookie = isset($_COOKIE['visitedProducts']) ? $_COOKIE['visitedProducts'] : '';
+    $mostvisitedCookie = isset($_COOKIE['MostVisitedProducts']) ? $_COOKIE['MostVisitedProducts'] : '';
+    $mostVisitedArray = explode('`', $mostvisitedCookie);
+
+    $productsArray = explode('`', $existingCookie);
+    $found=false;
+    // removing already visited product and adding to the front
+    foreach ($productsArray as $key=>$productt) {
+        $product= explode('~',$productt);
+        if(isset($product[0]) && isset($product[1]) && isset($product[2]) && isset($product[3]) ){
+            if($product[0]== $productName){
+                unset($productsArray[$key]);
             }
+        }
     }
-    else{
-        echo '<h1>You don\'t have access to this page,Only admin can access</h1>';
+    foreach ($mostVisitedArray as $key=>$mostproductt) {
+        $product= explode('~',$mostproductt);
+        if(isset($product[0]) && isset($product[1]) ){
+            if($product[0]== $productName){
+                $found=true;
+                $product[1]= (int)$product[1]+1;
+                $mostVisitedArray[$key] = "$productName~$product[1]~$img~$productDescription~$productPrice";
+            }
+        }
     }
+    if($found==false){
+        array_push($mostVisitedArray, "$productName~1~$img~$productDescription~$productPrice");
+    }
+    $productsArray = array_values($productsArray);
+
+    array_unshift($productsArray, $productNameJ);
+    if (count($productsArray) > 5) {
+        array_pop($productsArray);
+    }
+
+
+
+    // Set the cookie with the updated products array
+    setcookie('visitedProducts', implode('`', $productsArray), strtotime('Fri, 31 Dec 9999 23:59:59 GMT'), '/');
+    setcookie('MostVisitedProducts', implode('`', $mostVisitedArray), strtotime('Fri, 31 Dec 9999 23:59:59 GMT'), '/');
+
+    echo $img;
    
-    ?>
-     </div>
-    
-   
-		
-		
-		  
-	  </div>
+    echo '<div class="product" style="color:white;position:relative;left:40% width: 50px">';
+    echo '<img src="' . $_GET['img'] . '" alt="Product Image" width="230" height="345">';
+    echo '<h2>' . $productName . '</h2>'; 
+    echo '<p>Description: ' . urldecode($productDescription) . '</p>';
+    echo  '<a class ="button-link" style="color:white;  background-color: #3498db;  border-radius: 5px;  padding: 10px 20px;" href="'. $productPrice. '">IMDB</a>';
+    echo '</div>';
+} else {
+    echo '<p>No product information found.</p>';
+}
+?>
+  
+
+
+	<br>
+    <br>
+    <br>
+
   <footer class="footer-distributed">
  
 		<div class="footer-left">
  
 		<h3>CineMagic<span>Productions</span></h3>
  
-		<p class="footer-links">
+		<!-- <p class="footer-links">
 		<a href="index.html">Home</a>
 		<a href="about.html">About</a>
 		<a href="products.html">Products</a>
 		<a href="news.html">News</a>
 		<a href="contact.php">Contacts</a>
-		</p>
+		</p> -->
  
 		<p class="footer-company-name">CineMagicProductions &copy; 2023</p>
 		</div>
@@ -147,12 +189,7 @@ if (isset($_SESSION['username'])) {
   <script type="text/javascript" src="js/slick.min.js"></script>
 
   <script type="text/javascript">
-    $('.single-item').slick({
-      slidesToScroll: 1,
-      autoplay: true,
-      autoplaySpeed: 2000,
-      fade: true,
-  });
+  
   </script>
   </body>
   </html>

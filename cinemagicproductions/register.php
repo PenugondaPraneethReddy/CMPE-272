@@ -15,12 +15,12 @@
  		<img src="images/logo2.png" alt="logo">
 		<div class="header-right">
 			<ul>
-				<li><a class="active" href="index.html">Home</a></li>
-				<li><a href="about.html">About</a></li>&nbsp;&nbsp;
+				<li><a  href="index.php">Home</a></li>
+				<li><a href="about.php">About</a></li>&nbsp;&nbsp;
 				<li><a href="products.html">Products</a></li>
-				<li><a href="news.html">News</a></li>
+				<li><a href="news.php">News</a></li>
 				<li><a href="contact.php">Contacts</a></li>
-                <li><a href="login.php">Login</a></li>
+                <li><a class="active" href="register.php">register</a></li>
 			</ul>
 		</div>
 	</div>

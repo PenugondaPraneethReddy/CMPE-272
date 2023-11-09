@@ -27,7 +27,24 @@ if (isset($_SESSION['username'])) {
   <link rel="stylesheet" type="text/css" href="css/slick-theme.css">
   <link rel="stylesheet" type="text/css" href="css/footer.css">
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  
+  <style>
+        /* Style for the button */
+        .clearCookies {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        /* Style for the button on hover */
+        .clearCookies:hover {
+            background-color: #2580b3;
+        }
+
+
+    </style>
   </head>
   <body>
 
@@ -35,70 +52,98 @@ if (isset($_SESSION['username'])) {
       <img src="images/logo2.png" alt="logo">
      <div class="header-right">
        <ul>
-       <li><a  href="index.php">Home</a></li>&nbsp;&nbsp;
+       <li><a href="index.php">Home</a></li>&nbsp;&nbsp;
 	   <li><a href="about.php">About</a></li>
-	   <li><a href="products.php">Products</a></li>
+	   <li><a class="active" href="products.php">Products</a></li>
 	   <li><a href="news.php">News</a></li>
-       <li><a class="active" href="contact.php">Contacts</a></li>
+       <li><a href="contact.php">Contacts</a></li>
         <?php
     if (isset($_SESSION['username']) && $_SESSION['username'] === 'admin') {
         // Display the "Users" link only if the user is logged in as admin
         echo '<li><a href="users.php">Users</a></li>';
     }
     ?>
-
-
-        
          <?php echo $loginButton ?>
   
             </ul>
        </ul>
      </div>
    </div>
- <div style="color:white; padding-top: 100px; padding-bottom: 250px">
-     <br><br>
-     <h1>current users</h1>
-    <?php
-    if (isset($_SESSION['username']) && $_SESSION['username'] === 'admin') {
-        //read contacts from text files
-            $contacts = file("users.txt", FILE_IGNORE_NEW_LINES);
-            if ($contacts === false) {
-                echo "Error reading file.";
-            } else {
-                
-                echo "<ul>";
-                foreach ($contacts as $contact) {
-                    list($name) = explode(", ", $contact);
-                    echo "<li><strong>Name:</strong> $name </li>";
-                }
-                echo "</ul>";
-            }
-    }
-    else{
-        echo '<h1>You don\'t have access to this page,Only admin can access</h1>';
-    }
+
+   <br>
+   <br>
+   <br>
+   <br>
+   <br>
+   <br>
+   <br>
    
-    ?>
-     </div>
-    
+
+   <a class="button-link" href='/cinemagicproductions/visited.php' style="color:white;  background-color: #3498db;  border-radius: 5px;  padding: 10px 20px">Last Visited Products</a>
+    <a class="button-link" href='/cinemagicproductions/mostvisited.php' style="color:white;  background-color: #3498db;  border-radius: 5px;  padding: 10px 20px;">Most Visited Products</a>
+    <br><br><br>
+    <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+        <button type="submit" name="clearCookies" class="clearCookies">Clear All</button>
+    </form>
+   <h3>Most Searched movies : </h3>
    
-		
-		
-		  
-	  </div>
+
+   <?php
+        if (isset($_POST['clearCookies'])) {
+            setcookie('MostVisitedProducts', '', time() - 3600, '/'); // Expire the cookie
+            header('Location: ' . $_SERVER['PHP_SELF']); // Reload the page
+            exit();
+        }
+
+$mostVisitedProducts = isset($_COOKIE['MostVisitedProducts']) ? explode('`', $_COOKIE['MostVisitedProducts']) : [];
+usort($mostVisitedProducts, function ($a, $b) {
+    // Split the elements by ~ and extract the count part
+    if(isset($a[0]) && isset($a[1])){
+        $countA = (int)explode("~", $a)[1];
+        $countB = (int)explode("~", $b)[1];
+        return $countA < $countB;
+    }
+
+
+    // Compare the count values
+
+});
+echo '<div style="display:inline-flex" >';
+
+for ($i = 0; $i <= 5 && $i < count($mostVisitedProducts); $i++) {
+    $product= explode('~',$mostVisitedProducts[$i]);
+
+    if(isset($product[0]) && isset($product[1]) ){
+       echo '<div style="isplay: inline-block; width: 190px; padding-right: 100px;">';
+        echo '<a style="color:white" href="/cinemagicproductions/product.php?name='. $product[0] .'&img='. $product[2] .'&des='. $product[3] .'&imdb='. $product[4] .'">';
+        echo '<div class="product-card" >';
+        echo '<img src="' . urldecode($product[2]) . '" alt="Product Image" width="230" height="345">';
+        echo '<h2 class="product-title">' . $product[0] . '</h2>';
+        echo  '<a class ="button-link" style="color:white;  background-color: #3498db;  border-radius: 5px;  padding: 10px 20px;" href="'. $product[4]. '">IMDB</a>';
+
+        echo '</div>';
+        echo '</a>';
+        echo '</div>';
+    }
+}echo '</div>';
+
+?>
+<br>
+<br>
+<br>
   <footer class="footer-distributed">
  
 		<div class="footer-left">
  
 		<h3>CineMagic<span>Productions</span></h3>
  
-		<p class="footer-links">
+		<!-- <p class="footer-links">
 		<a href="index.html">Home</a>
 		<a href="about.html">About</a>
 		<a href="products.html">Products</a>
 		<a href="news.html">News</a>
 		<a href="contact.php">Contacts</a>
-		</p>
+		</p> -->
  
 		<p class="footer-company-name">CineMagicProductions &copy; 2023</p>
 		</div>
@@ -147,12 +192,7 @@ if (isset($_SESSION['username'])) {
   <script type="text/javascript" src="js/slick.min.js"></script>
 
   <script type="text/javascript">
-    $('.single-item').slick({
-      slidesToScroll: 1,
-      autoplay: true,
-      autoplaySpeed: 2000,
-      fade: true,
-  });
+  
   </script>
   </body>
   </html>
